@@ -8,9 +8,14 @@ Config { font           = "xft:Hack:size=9"
        , commands = [ Run DynNetwork ["-L","1000","-H","5000","--normal","green","--high","red"] 10
                     , Run MultiCpu ["-L","3","-H","50","--normal","green","--high","red"] 10
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
-					, Run Battery ["-L","10","-H","75","--low","red","--high","green"] 10
-    		    	, Run Date "%a %b %_d %Y %r" "date" 10
-					, Run StdinReader
+                    , Run Battery [ "-L", "10"
+                                  , "-H", "75"
+                                  , "--low", "red"
+                                  , "--high", "green"
+                                  , "-t", "Batt: <left>% (<timeleft>)"
+                                  ] 10
+                    , Run Date "%a %b %_d %Y %r" "date" 10
+                    , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
