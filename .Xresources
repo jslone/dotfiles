@@ -1,6 +1,9 @@
 *.scrollBar: false
 
-*.font: xft:Hack:size=9
+*.font: xft:Hack:size=9, xft:Font\ Awesome:size=9
+
+*.transparent: true
+*.shading: 30
 
 ! Dracula Xresources palette
 *.foreground: #F8F8F2
