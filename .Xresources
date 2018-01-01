@@ -2,12 +2,11 @@
 
 *.font: xft:Hack:size=9, xft:Font\ Awesome:size=9
 
-*.transparent: true
-*.shading: 30
+*.depth: 32
 
 ! Dracula Xresources palette
 *.foreground: #F8F8F2
-*.background: #282A36
+*.background: [95]#282A36
 *.color0:     #000000
 *.color8:     #4D4D4D
 *.color1:     #FF5555
