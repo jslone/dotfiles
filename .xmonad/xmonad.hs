@@ -15,16 +15,20 @@ extraKeys = [ ("<XF86AudioLowerVolume>"        ,spawn "pulseaudio-ctl down 10")
 --            , ("<XF86AudioPlay>"               ,spawn "play-pause-mpd.sh"     )
 --            , ("<XF86AudioPrev>"               ,spawn "mpc prev"     )
 --            , ("<XF86AudioNext>"               ,spawn "mpc next"     )
---            , ("<XF86PowerOff>"                ,spawn "lock.sh" )
+            , ("<XF86PowerOff>"                ,spawn "poweroff" )
 --            , ("<F12>"                         ,namedScratchpadAction myScratchpads "termscratch")
-		  ]
+		    ]
 
-xmonadConfig = defaultConfig
+
+xmonadConfig = def
     { terminal    = "urxvt"
     , borderWidth = 4
     , normalBorderColor = "black"
     , focusedBorderColor = "#bd93f9" --"#3AF0D1" -- "#FF1222" --"#69DFFA"   --"#E39402"    #00F2FF,
-    , startupHook = setWMName "LG3D"
-    , layoutHook = smartBorders $ smartSpacingWithEdge 5 $ Tall 1 (3/100) (1/2)
+    , startupHook = do
+        setWMName "LG3D"
+    , layoutHook = smartBorders
+                 $ smartSpacingWithEdge 5
+                 $ Tall 1 (3/100) (1/2)
     }
     `additionalKeysP` extraKeys
