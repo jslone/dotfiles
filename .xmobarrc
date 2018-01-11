@@ -1,23 +1,23 @@
 Config { font           = "xft:Hack:size=9"
        , borderColor    = "black"
        , border         = TopB
-       , bgColor        = "black"
-       , fgColor        = "grey"
+       , bgColor        = "#282A36"
+       , fgColor        = "#F8F8F2"
        , position       = Top
        , lowerOnStart   = True
-       , commands = [ Run DynNetwork ["-L","1000","-H","5000","--normal","green","--high","red"] 10
-                    , Run MultiCpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+       , commands = [ Run DynNetwork ["-L","1000","-H","5000","--normal","#50FA7B","--high","#FF5555"] 10
+                    , Run MultiCpu ["-L","3","-H","50","--normal","#50FA7B","--high","#FF5555"] 10
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Battery [ "-L", "10"
                                   , "-H", "75"
-                                  , "--low", "red"
-                                  , "--high", "green"
+                                  , "--low", "#FF5555"
+                                  , "--high", "#50FA7B"
                                   , "-t", "Batt: <left>% (<timeleft>)"
                                   ] 10
-                    , Run Date "%a %b %_d %Y %r" "date" 10
+                    , Run Date "%a <fc=#FF79C6>//</fc> %r <fc=#FF79C6>//</fc> %_d %b %Y" "date" 10
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% | %multicpu% | %memory% | %dynnetwork% } <fc=#ee9a00>%date%</fc> { %battery%"
+       , template = "%StdinReader% <fc=#FF79C6>\\</fc> %multicpu% <fc=#FF79C6>\\</fc> %memory% <fc=#FF79C6>\\</fc> %dynnetwork% } <fc=#9AEDFE>%date%</fc> { %battery%"
        }
