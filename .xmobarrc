@@ -5,19 +5,38 @@ Config { font           = "xft:Hack:size=9"
        , fgColor        = "#F8F8F2"
        , position       = Top
        , lowerOnStart   = True
-       , commands = [ Run DynNetwork ["-L","1000","-H","5000","--normal","#50FA7B","--high","#FF5555"] 10
-                    , Run MultiCpu ["-L","3","-H","50","--normal","#50FA7B","--high","#FF5555"] 10
-                    , Run Memory ["-t","Mem: <usedratio>%"] 10
-                    , Run Battery [ "-L", "10"
-                                  , "-H", "75"
-                                  , "--low", "#FF5555"
-                                  , "--high", "#50FA7B"
-                                  , "-t", "Batt: <left>% (<timeleft>)"
-                                  ] 10
-                    , Run Date "%a <fc=#FF79C6>//</fc> %r <fc=#FF79C6>//</fc> %_d %b %Y" "date" 10
-                    , Run StdinReader
-                    ]
+       , iconRoot       = ".icons"
+       , commands =
+            [ Run DynNetwork
+                [ "-L" , "1000"
+                , "-H" , "5000"
+                , "--normal" , "#50FA7B"
+                , "--high"   , "#FF5555"
+                , "-t", "<icon=wifi_02.xbm/><dev>"
+                ] 10
+            , Run MultiCpu
+                [ "-L" , "3"
+                , "-H" , "50"
+                , "--normal" , "#50FA7B"
+                , "--high"   , "#FF5555"
+                , "-t", "<icon=cpu.xbm/> <total>%"
+                ] 10
+            , Run Memory ["-t","<icon=mem.xbm/> <usedratio>%"] 10
+            , Run Battery
+                [ "-L", "10"
+                , "-H", "75"
+                , "--low"  , "#FF5555"
+                , "--high" , "#50FA7B"
+                , "-t", "<acstatus><left>% (<timeleft>)"
+                , "--"
+                , "-O", "<icon=ac_01.xbm/>"
+                , "-i", "<icon=ac_01.xbm/>"
+                , "-o", "<icon=bat_full_02.xbm/>"
+                ] 10
+            , Run Date "%a <fc=#FF79C6>//</fc> %r <fc=#FF79C6>//</fc> %_d %b %Y" "date" 10
+            , Run StdinReader
+            ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% <fc=#FF79C6>\\</fc> %multicpu% <fc=#FF79C6>\\</fc> %memory% <fc=#FF79C6>\\</fc> %dynnetwork% } <fc=#9AEDFE>%date%</fc> { %battery%"
+       , template = "%StdinReader% } <fc=#9AEDFE>%date%</fc> { %dynnetwork% <fc=#FF79C6>//</fc> %multicpu% <fc=#FF79C6>//</fc> %memory% <fc=#FF79C6>//</fc> %battery%"
        }
