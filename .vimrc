@@ -11,9 +11,9 @@ Plug 'junegunn/vim-plug'
 " Utilities
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/syntastic'
+Plug 'vim-syntastic/syntastic'
 Plug 'tpope/vim-surround'
-Plug 'kien/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'bling/vim-airline'
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdcommenter'
@@ -26,6 +26,12 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 " Languages
 Plug 'rust-lang/rust.vim'
+
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+
+Plug 'leafgarland/typescript-vim'
+Plug 'ianks/vim-tsx'
 
 " Colors
 Plug 'dracula/vim'
@@ -62,6 +68,10 @@ let g:deoplete#enable_at_startup = 1
 " LanguageClient
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+    \ 'javascript': ['javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['javascript-typescript-stdio'],
+    \ 'typescript': ['javascript-typescript-stdio'],
+    \ 'typescript.tsx': ['javascript-typescript-stdio'],
     \ }
 
 " NERDTree
@@ -73,3 +83,6 @@ let g:LanguageClient_autoStart = 1
 
 " Rust.vim
 let g:rustfmt_autosave = 1
+
+" CtrlP
+let g:ctrlp_map = '<leader>p'
