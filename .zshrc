@@ -14,6 +14,8 @@ plugins=(
   git
 )
 
+DEFAULT_USER=jms
+
 source $ZSH/oh-my-zsh.sh
 
 # nvm
