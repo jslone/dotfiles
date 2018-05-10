@@ -1,14 +1,32 @@
 import qualified Data.Map as M
 import qualified XMonad.StackSet as W
 
+import System.Exit
+import System.Posix.Env (getEnv)
+import Data.Maybe (maybe)
+
 import XMonad
+import XMonad.Config.Desktop
+import XMonad.Config.Gnome
+import XMonad.Config.Kde
+import XMonad.Config.Xfce
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.SetWMName
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing
 import XMonad.Util.EZConfig
 
-main = xmonad =<< xmobar xmonadConfig
+main = do
+    session <- getEnv "DESKTOP_SESSION"
+    xmonad =<< xmobar ( addMyConfig (desktopFromSessionEnv session ) )
+
+desktop "gnome" = gnomeConfig
+desktop "kde" = kde4Config
+desktop "xfce" = xfceConfig
+desktop "xmonad-mate" = gnomeConfig
+desktop _ = desktopConfig
+
+desktopFromSessionEnv = maybe desktopConfig desktop
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
@@ -48,6 +66,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
     -- quit
     , ((modMask              , xK_BackSpace), spawn "xmonad --restart")
+    , ((modMask .|. shiftMask, xK_q ), io (exitWith ExitSuccess))
     ]
     ++
     -- mod-[1..9] %! Switch to workspace N
@@ -75,7 +94,7 @@ extraKeys = [ ("<XF86AudioLowerVolume>"        ,spawn "pulseaudio-ctl down 10")
 		    ]
 
 
-xmonadConfig = def
+addMyConfig config = config
     { terminal    = "urxvt"
     , borderWidth = 4
     , normalBorderColor = "black"
