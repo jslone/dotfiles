@@ -52,7 +52,7 @@ set smartindent
 set expandtab
 
 syntax on
-color dracula
+"color dracula
 
 """""""""""""""""""""""""""""""""""""""
 " Plugins

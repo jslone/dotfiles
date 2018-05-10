@@ -95,7 +95,7 @@ extraKeys = [ ("<XF86AudioLowerVolume>"        ,spawn "pulseaudio-ctl down 10")
 
 
 addMyConfig config = config
-    { terminal    = "urxvt"
+    { terminal    = "urxvt256c"
     , borderWidth = 4
     , normalBorderColor = "black"
     , focusedBorderColor = "#bd93f9" --"#3AF0D1" -- "#FF1222" --"#69DFFA"   --"#E39402"    #00F2FF,
