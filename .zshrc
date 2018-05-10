@@ -24,7 +24,8 @@ DEFAULT_USER=jms
 source $ZSH/oh-my-zsh.sh
 
 # nvm
-source /usr/share/nvm/init-nvm.sh
+export NVM_DIR=~/.nvm
+source $NVM_DIR/nvm.sh
 
 # Path
 PATH+=:~/.gem/ruby/2.4.0/bin
