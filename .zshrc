@@ -27,9 +27,17 @@ source $ZSH/oh-my-zsh.sh
 export NVM_DIR=~/.nvm
 source $NVM_DIR/nvm.sh
 
+# rustup
+source ~/.cargo/env
+
+# go
+export GOPATH=~/go
+
 # Path
+PATH+=:~/.local/bin
 PATH+=:~/.gem/ruby/2.4.0/bin
 PATH+=:$ANDROID_SDK/tools/bin:$ANDROID_SDK/platform-tools
 PATH+=:$NVM_BIN
+PATH+=:$GOPATH/bin
 export PATH
 

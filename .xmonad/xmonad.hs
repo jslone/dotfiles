@@ -1,6 +1,10 @@
 import qualified Data.Map as M
 import qualified XMonad.StackSet as W
 
+import qualified DBus as D
+import qualified DBus.Client as D
+import qualified Codec.Binary.UTF8.String as UTF8
+
 import System.Exit
 import System.Posix.Env (getEnv)
 import Data.Maybe (maybe)
@@ -11,14 +15,30 @@ import XMonad.Config.Gnome
 import XMonad.Config.Kde
 import XMonad.Config.Xfce
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.SetWMName
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing
 import XMonad.Util.EZConfig
 
+--------------------------------------------------------------------------------
+-- MAIN                                                                       --
+--------------------------------------------------------------------------------
+
 main = do
+    dbus <- D.connectSession
+    D.requestName dbus (D.busName_ "org.xmonad.Log")
+        [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+
     session <- getEnv "DESKTOP_SESSION"
-    xmonad =<< xmobar ( addMyConfig (desktopFromSessionEnv session ) )
+
+    xmonad
+        $ addMyConfig dbus (desktopFromSessionEnv session )
+
+
+--------------------------------------------------------------------------------
+-- DESKTOP                                                                    --
+--------------------------------------------------------------------------------
 
 desktop "gnome" = gnomeConfig
 desktop "kde" = kde4Config
@@ -27,6 +47,11 @@ desktop "xmonad-mate" = gnomeConfig
 desktop _ = desktopConfig
 
 desktopFromSessionEnv = maybe desktopConfig desktop
+
+
+--------------------------------------------------------------------------------
+-- KEYBINDINGS                                                                --
+--------------------------------------------------------------------------------
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
@@ -91,19 +116,90 @@ extraKeys = [ ("<XF86AudioLowerVolume>"        ,spawn "pulseaudio-ctl down 10")
 --            , ("<XF86AudioNext>"               ,spawn "mpc next"     )
             , ("<XF86PowerOff>"                ,spawn "poweroff" )
 --            , ("<F12>"                         ,namedScratchpadAction myScratchpads "termscratch")
-		    ]
+            ]
 
 
-addMyConfig config = config
-    { terminal    = "urxvt256c"
+--------------------------------------------------------------------------------
+-- LOGHOOK                                                                    --
+--------------------------------------------------------------------------------
+myLogHook :: D.Client -> PP
+myLogHook dbus = def
+    { ppOutput = dbusOutput dbus
+    , ppCurrent = wrap ("%{F" ++ cyan ++ "} ") " %{F-}"
+    , ppVisible = wrap ("%{F" ++ cyan ++ "} ") " %{F-}"
+    , ppUrgent = wrap ("%{F" ++ red ++ "} ") " %{F-}"
+    , ppHidden = wrap " " " "
+    , ppWsSep = ""
+    , ppSep = " | "
+    , ppTitle = myAddSpaces 25
+    }
+
+-- Emit a DBus signal on log updates
+dbusOutput :: D.Client -> String -> IO ()
+dbusOutput dbus str = do
+    let signal = (D.signal objectPath interfaceName memberName) {
+            D.signalBody = [D.toVariant $ UTF8.decodeString str]
+        }
+    D.emit dbus signal
+
+    where
+        objectPath = D.objectPath_ "/org/xmonad/Log"
+        interfaceName = D.interfaceName_ "org.xmonad.Log"
+        memberName = D.memberName_ "Update"
+
+myAddSpaces :: Int -> String -> String
+myAddSpaces len str = sstr ++ replicate (len - length sstr) ' '
+    where
+        sstr = shorten len str
+
+
+--------------------------------------------------------------------------------
+-- LAYOUTHOOK                                                                 --
+--------------------------------------------------------------------------------
+myLayoutHook = avoidStruts
+                $ smartBorders
+                $ smartSpacingWithEdge 5
+                $ Tall 1 (3/100) (1/2)
+
+
+--------------------------------------------------------------------------------
+-- STARTUPHOOK                                                                --
+--------------------------------------------------------------------------------
+
+myStartupHook = do
+    setWMName "LG3D"
+    spawn "$HOME/.config/polybar/launch.sh"
+
+
+--------------------------------------------------------------------------------
+-- COLOR                                                                      --
+--------------------------------------------------------------------------------
+
+bg        = "#282a36"
+fg        = "#f8f8f2"
+selection = "#44475a"
+cyan      = "#8be9fd"
+green     = "#50fa7b"
+orange    = "#ffb86c"
+pink      = "#ff79c6"
+purple    = "#bd93f9"
+red       = "#ff5555"
+yellow    = "#f1fa8c"
+
+
+--------------------------------------------------------------------------------
+-- CONFIG                                                                     --
+--------------------------------------------------------------------------------
+
+addMyConfig dbus config = config
+    { terminal    = "urxvt256c-ml"
     , borderWidth = 4
     , normalBorderColor = "black"
-    , focusedBorderColor = "#bd93f9" --"#3AF0D1" -- "#FF1222" --"#69DFFA"   --"#E39402"    #00F2FF,
+    , focusedBorderColor = purple --"#3AF0D1" -- "#FF1222" --"#69DFFA"   --"#E39402"    #00F2FF,
     , keys = myKeys
-    , startupHook = do
-        setWMName "LG3D"
-    , layoutHook = smartBorders
-                 $ smartSpacingWithEdge 5
-                 $ Tall 1 (3/100) (1/2)
+    , startupHook = myStartupHook
+    , layoutHook = myLayoutHook
+    , logHook = dynamicLogWithPP (myLogHook dbus)
+    , manageHook = manageDocks
     }
     `additionalKeysP` extraKeys

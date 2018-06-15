@@ -4,3 +4,15 @@
 [submodule ".nvm"]
 	path = .nvm
 	url = https://github.com/creationix/nvm.git
+[submodule ".xmonad/xmonad-git"]
+	path = .xmonad/xmonad-git
+	url = https://github.com/xmonad/xmonad
+[submodule ".xmonad/xmonad-contrib-git"]
+	path = .xmonad/xmonad-contrib-git
+	url = https://github.com/xmonad/xmonad-contrib
+[submodule ".xmonad/xmobar-git"]
+	path = .xmonad/xmobar-git
+	url = https://github.com/jaor/xmobar
+[submodule "go/src/github.com/xintron/xmonad-log"]
+	path = go/src/github.com/xintron/xmonad-log
+	url = https://github.com/xintron/xmonad-log
